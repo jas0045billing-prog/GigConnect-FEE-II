@@ -1,0 +1,205 @@
+{
+  "gigs": [
+    {
+      "id": 1,
+      "title": "I will build a modern responsive website using React",
+      "description": "I will build a high-performance, mobile-friendly website using React.js and modern CSS. Includes component architecture, clean code, and API integration.",
+      "seller": "Aman Singh",
+      "sellerId": 1,
+      "category": "Web Development",
+      "price": 2500,
+      "rating": 4.9,
+      "reviews": 42,
+      "delivery": "3 days",
+      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    },
+    {
+      "id": 2,
+      "title": "I will design a professional logo for your business",
+      "description": "Get a unique, memorable, and minimalist vector logo design for your brand. Deliverables include SVG, PNG, and transparent high-res files.",
+      "seller": "Simran Kaur",
+      "sellerId": 2,
+      "category": "Graphic Design",
+      "price": 800,
+      "rating": 4.8,
+      "reviews": 31,
+      "delivery": "2 days",
+      "image": "https://images.unsplash.com/photo-1626785774573-4b799315345d"
+    },
+    {
+      "id": 3,
+      "title": "I will edit engaging YouTube videos professionally",
+      "description": "Professional video editing including color grading, sound design, jump cuts, subtitles, and engaging motion graphics for YouTube and Reels.",
+      "seller": "Arjun Mehta",
+      "sellerId": 4,
+      "category": "Video Editing",
+      "price": 1500,
+      "rating": 4.7,
+      "reviews": 25,
+      "delivery": "4 days",
+      "image": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d"
+    },
+    {
+      "id": 4,
+      "title": "I will write SEO optimized blog articles for your website",
+      "description": "Engaging, well-researched, and keyword-optimized blog posts that rank on Google and convert readers into loyal customers.",
+      "seller": "Karan Malhotra",
+      "sellerId": 5,
+      "category": "Content Writing",
+      "price": 700,
+      "rating": 4.8,
+      "reviews": 46,
+      "delivery": "3 days",
+      "image": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32"
+    },
+    {
+      "id": 5,
+      "title": "I will run high ROI digital marketing and ad campaigns",
+      "description": "Comprehensive digital marketing strategy including Facebook, Instagram, and Google Ads management to maximize your leads and conversions.",
+      "seller": "Neha Verma",
+      "sellerId": 6,
+      "category": "Digital Marketing",
+      "price": 2200,
+      "rating": 4.9,
+      "reviews": 35,
+      "delivery": "5 days",
+      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113"
+    },
+    {
+      "id": 6,
+      "title": "I will produce custom background music and audio tracks",
+      "description": "Original background score, podcast intro music, or beats produced to your exact vibe and commercial requirements.",
+      "seller": "Rishi Saxena",
+      "sellerId": 7,
+      "category": "Music & Audio",
+      "price": 1800,
+      "rating": 4.9,
+      "reviews": 28,
+      "delivery": "3 days",
+      "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4"
+    },
+    {
+      "id": 7,
+      "title": "I will create a modern UI UX design for your website",
+      "description": "User-centric Figma UI/UX designs, wireframes, and prototypes that deliver intuitive user experiences.",
+      "seller": "Mehak Arora",
+      "sellerId": 8,
+      "category": "Graphic Design",
+      "price": 2000,
+      "rating": 4.9,
+      "reviews": 38,
+      "delivery": "5 days",
+      "image": "https://images.unsplash.com/photo-1558655146-d09347e92766"
+    },
+    {
+      "id": 8,
+      "title": "I will develop a custom Python script or backend API",
+      "description": "Python web scraping, data processing scripts, or RESTful APIs built using Flask and FastAPI.",
+      "seller": "Aman Singh",
+      "sellerId": 1,
+      "category": "Web Development",
+      "price": 3000,
+      "rating": 4.9,
+      "reviews": 52,
+      "delivery": "5 days",
+      "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
+    },
+    {
+      "title": "Full Stack MERN Web App Development",
+      "description": "Custom MERN application with REST API and responsive styling",
+      "seller": "Aman Singh",
+      "sellerId": 1,
+      "category": "Web Development",
+      "price": 4500,
+      "rating": 5,
+      "reviews": 0,
+      "delivery": "5 days",
+      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+      "id": 9
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Web Development",
+      "icon": "💻",
+      "description": "Websites & applications"
+    },
+    {
+      "id": 2,
+      "name": "Graphic Design",
+      "icon": "🎨",
+      "description": "Logos & visual branding"
+    },
+    {
+      "id": 3,
+      "name": "Content Writing",
+      "icon": "✍️",
+      "description": "Articles & copywriting"
+    },
+    {
+      "id": 4,
+      "name": "Video Editing",
+      "icon": "🎬",
+      "description": "Engaging edits & animations"
+    },
+    {
+      "id": 5,
+      "name": "Digital Marketing",
+      "icon": "📈",
+      "description": "Social media & ads growth"
+    },
+    {
+      "id": 6,
+      "name": "Music & Audio",
+      "icon": "🎵",
+      "description": "Production & voiceovers"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "gigId": 1,
+      "userName": "Rahul Sharma",
+      "rating": 5,
+      "comment": "Outstanding React code! Aman delivered exactly what I asked for ahead of time."
+    },
+    {
+      "id": 2,
+      "gigId": 1,
+      "userName": "Pooja Patel",
+      "rating": 5,
+      "comment": "Very responsive and skilled developer. Highly recommended!"
+    },
+    {
+      "id": 3,
+      "gigId": 2,
+      "userName": "Vikas Nair",
+      "rating": 4.8,
+      "comment": "Clean logo design and very fast turnaround."
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Aman Singh",
+      "email": "aman@example.com",
+      "role": "seller",
+      "title": "Full Stack Web Developer"
+    },
+    {
+      "id": 2,
+      "name": "Simran Kaur",
+      "email": "simran@example.com",
+      "role": "seller",
+      "title": "Brand & Logo Designer"
+    },
+    {
+      "id": 3,
+      "name": "Jaspreet",
+      "email": "jaspreet@example.com",
+      "role": "buyer",
+      "title": "Product Manager"
+    }
+  ]
+}
