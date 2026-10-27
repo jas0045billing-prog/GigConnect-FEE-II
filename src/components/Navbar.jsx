@@ -55,22 +55,34 @@ function Navbar() {
           )}
 
           {/* Seller Links */}
-          {currentUser && currentUser.role === "seller" && (
-            <>
-              <Link to="/create-gig">Create Gig</Link>
-              <Link to="/manage-orders">Manage Orders</Link>
-              <Link to="/dashboard">Dashboard</Link>
-              <ThemeToggle />
-              <div className="nav-user-badge">
-                <span className="user-icon">👤</span>
-                <span className="user-name">{currentUser.name}</span>
-                <span className="role-tag seller">Seller</span>
-              </div>
-              <button onClick={handleLogout} className="logout-btn" title="Logout">
-                Logout
-              </button>
-            </>
-          )}
+          
+{/* Freelancer Links */}
+{currentUser && currentUser.role === "seller" && (
+  <>
+    <Link to="/projects">Explore Projects</Link>
+    <Link to="/my-proposals">My Proposals</Link>
+    <Link to="/create-gig">Create Gig</Link>
+    <Link to="/manage-orders">Manage Orders</Link>
+    <Link to="/dashboard">Dashboard</Link>
+
+    <ThemeToggle />
+
+    <div className="nav-user-badge">
+      <span className="user-icon">👤</span>
+      <span className="user-name">{currentUser.name}</span>
+      <span className="role-tag seller">Freelancer</span>
+    </div>
+
+    <button
+      onClick={handleLogout}
+      className="logout-btn"
+      title="Logout"
+    >
+      Logout
+    </button>
+  </>
+)}
+
         </div>
       </div>
     </nav>

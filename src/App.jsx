@@ -21,6 +21,10 @@ import ManageOrders from "./pages/ManageOrders";
 
 import NotFound from "./pages/NotFound";
 
+import ExploreProjects from "./pages/ExploreProjects";
+import ProjectDetails from "./pages/ProjectDetails";
+import MyProposals from "./pages/MyProposals";
+
 // ============================================================================
 // VIVA EXPLANATION: Application Root, Providers & Route Protection Hierarchy
 // 1. AuthProvider: Provides global authentication state (currentUser, login, logout).
@@ -38,6 +42,47 @@ function App() {
 
             <main className="main-content">
               <Routes>
+                {/* Freelancer: explore open projects */}
+<Route
+  path="/projects"
+  element={
+    <ProtectedRoute
+      requiredRole="seller"
+      customGuestMessage="Please log in as a freelancer to explore projects."
+      deniedMessage="Only freelancer accounts can access project opportunities."
+    >
+      <ExploreProjects />
+    </ProtectedRoute>
+  }
+/>
+
+{/* Freelancer: view a project and submit a proposal */}
+<Route
+  path="/projects/:id"
+  element={
+    <ProtectedRoute
+      requiredRole="seller"
+      customGuestMessage="Please log in as a freelancer to view project details."
+      deniedMessage="Only freelancer accounts can submit proposals."
+    >
+      <ProjectDetails />
+    </ProtectedRoute>
+  }
+/>
+
+{/* Freelancer: track proposal decisions */}
+<Route
+  path="/my-proposals"
+  element={
+    <ProtectedRoute
+      requiredRole="seller"
+      customGuestMessage="Please log in as a freelancer to view your proposals."
+      deniedMessage="Only freelancer accounts can view their proposals."
+    >
+      <MyProposals />
+    </ProtectedRoute>
+  }
+/>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Navigate to="/" replace />} />

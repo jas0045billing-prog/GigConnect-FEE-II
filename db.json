@@ -201,5 +201,9 @@
       "role": "buyer",
       "title": "Product Manager"
     }
-  ]
+   ], 
+  "projects": [],
+  "proposals": [],
+  "assignments": []
+
 }

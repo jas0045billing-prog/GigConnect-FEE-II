@@ -1264,6 +1264,318 @@ a {
    RESPONSIVE DESIGN
 ========================= */
 
+/* Freelancer project marketplace */
+
+.projects-page,
+.project-details-page,
+.my-proposals-page {
+  max-width: 1250px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 45px 25px 70px;
+}
+
+.projects-page .explore-header,
+.project-details-page .explore-header,
+.my-proposals-page .explore-header {
+  margin-bottom: 28px;
+}
+
+.project-filters {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(150px, 240px) auto;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.project-filters input,
+.project-filters select {
+  min-width: 0;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.project-card,
+.project-detail-card {
+  padding: 23px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  box-shadow: var(--card-shadow);
+  min-width: 0;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project-card h2 {
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.project-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.project-status,
+.proposal-status,
+.skill-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.project-status {
+  color: var(--primary-text);
+  background: var(--primary-light);
+}
+
+.project-status.closed {
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.project-description {
+  color: var(--text-secondary);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.project-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skill-chip {
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.project-meta {
+  display: grid;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.project-meta p {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.project-meta strong {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.project-meta span {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.project-action {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  padding: 11px 15px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.project-action:hover {
+  background: var(--primary-hover);
+}
+
+.project-result-count {
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+.project-detail-card {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+}
+
+.project-detail-card > h1 {
+  font-size: clamp(26px, 4vw, 38px);
+  margin: 20px 0 14px;
+}
+
+.project-detail-card > .project-meta {
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--primary-text);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.project-requirements,
+.proposal-form-section {
+  margin-top: 25px;
+}
+
+.project-requirements h2,
+.proposal-form-section h2 {
+  margin-bottom: 10px;
+}
+
+.proposal-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.proposal-form input,
+.proposal-form textarea {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+.proposal-form input:focus,
+.proposal-form textarea:focus,
+.project-filters input:focus,
+.project-filters select:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 1px;
+}
+
+.proposal-form button {
+  margin-top: 10px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 9px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.proposal-form button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.proposal-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.proposal-status.accepted {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.proposal-status.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.proposal-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 25px 0;
+}
+
+.proposal-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.proposal-summary strong {
+  font-size: 25px;
+}
+
+.proposal-summary span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.proposal-cover-letter {
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .proposal-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .projects-page,
+  .project-details-page,
+  .my-proposals-page {
+    padding: 28px 16px 45px;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail-card {
+    padding: 20px;
+  }
+}
+
+
 @media (max-width: 900px) {
   .nav-links {
     gap: 15px;
