@@ -105,8 +105,9 @@
       "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
     },
     {
+      "id": 9,
       "title": "Full Stack MERN Web App Development",
-      "description": "Custom MERN application with REST API and responsive styling",
+      "description": "Custom MERN application with REST API and responsive styling.",
       "seller": "Aman Singh",
       "sellerId": 1,
       "category": "Web Development",
@@ -114,8 +115,7 @@
       "rating": 5,
       "reviews": 0,
       "delivery": "5 days",
-      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-      "id": 9
+      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
     }
   ],
   "categories": [
@@ -185,73 +185,91 @@
       "name": "Aman Singh",
       "email": "aman@example.com",
       "role": "seller",
-      "title": "Full Stack Web Developer"
+      "title": "Full Stack Web Developer",
+      "skills": ["React", "JavaScript", "Node.js", "Python", "REST APIs"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
     },
     {
       "id": 2,
       "name": "Simran Kaur",
       "email": "simran@example.com",
       "role": "seller",
-      "title": "Brand & Logo Designer"
+      "title": "Brand & Logo Designer",
+      "skills": ["Logo Design", "Branding", "Illustrator"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
     },
     {
       "id": 3,
       "name": "Jaspreet",
       "email": "jaspreet@example.com",
       "role": "buyer",
-      "title": "Product Manager"
+      "title": "Product Manager",
+      "skills": [],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    {
+      "id": 4,
+      "name": "Arjun Mehta",
+      "email": "arjun@example.com",
+      "role": "seller",
+      "title": "Professional Video Editor",
+      "skills": ["Video Editing", "Color Grading", "Motion Graphics"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    {
+      "id": 5,
+      "name": "Karan Malhotra",
+      "email": "karan@example.com",
+      "role": "seller",
+      "title": "SEO Content Writer",
+      "skills": ["SEO", "Blog Writing", "Copywriting"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    {
+      "id": 6,
+      "name": "Neha Verma",
+      "email": "neha@example.com",
+      "role": "seller",
+      "title": "Digital Marketing Specialist",
+      "skills": ["SEO", "Social Media", "Google Ads"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    {
+      "id": 7,
+      "name": "Rishi Saxena",
+      "email": "rishi@example.com",
+      "role": "seller",
+      "title": "Music Producer",
+      "skills": ["Audio Production", "Music Composition", "Sound Design"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    {
+      "id": 8,
+      "name": "Mehak Arora",
+      "email": "mehak@example.com",
+      "role": "seller",
+      "title": "UI/UX Designer",
+      "skills": ["Figma", "Wireframing", "Prototyping", "UI Design"],
+      "completedProjects": 0,
+      "averageRating": 0,
+      "totalReviews": 0
     }
-
-   ], 
+  ],
   "projects": [],
   "proposals": [],
   "assignments": []
-
-
-  ,
-  "projects": [
-    {
-      "title": "Build a Responsive E-Commerce Website",
-      "description": "I am looking for a developer to build a modern, responsive e-commerce website for an online business. The website should include a homepage, product listings, product details, a shopping cart, and a user-friendly interface. The design should work smoothly on desktops, tablets, and mobile devices.",
-      "clientId": 1,
-      "clientName": "Demo Seller",
-      "category": "Web Development",
-      "skills": [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "React.js",
-        "Responsive Web Design"
-      ],
-      "budgetMin": 5000,
-      "budgetMax": 15000,
-      "deadline": "2026-11-26",
-      "status": "open",
-      "createdAt": "2026-10-26",
-      "id": 1
-    },
-    {
-      "title": "Build a Responsive E-Commerce Website",
-      "description": "hi",
-      "clientId": 1793084981110,
-      "clientName": "jaspreet kaur",
-      "category": "Content Writing",
-      "skills": [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "React.js",
-        "Responsive Web Design"
-      ],
-      "budgetMin": 3000,
-      "budgetMax": 12980,
-      "deadline": "2027-02-06",
-      "status": "open",
-      "createdAt": "2026-10-27",
-      "id": 2
-    }
-  ],
-  "proposals": [],
-  "assignments": []
-
 }

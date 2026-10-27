@@ -28,14 +28,6 @@ import ExploreProjects from "./pages/ExploreProjects";
 import ProjectDetails from "./pages/ProjectDetails";
 import MyProposals from "./pages/MyProposals";
 
-// ============================================================================
-// VIVA EXPLANATION: Application Root, Providers & Route Protection Hierarchy
-// 1. AuthProvider: Provides global authentication state (currentUser, login, logout).
-// 2. ThemeProvider: Provides dynamic dark/light mode context.
-// 3. ProtectedRoute: Enforces authentication and role-based permissions at the route level.
-// ============================================================================
-
-
 
 function App() {
   return (
@@ -94,7 +86,7 @@ function App() {
                   path="/home"
                   element={<Navigate to="/" replace />}
                 />
-                <Route path="/explore" element={<Explore />} />
+                <Route path="/explore" element={<Navigate to="/projects" replace />} />
                 <Route path="/gig/:id" element={<GigDetails />} />
                 <Route path="/seller/:id" element={<SellerProfile />} />
 
