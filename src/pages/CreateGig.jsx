@@ -6,86 +6,111 @@ function CreateGig() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  // Form states (Requirement 5)
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [delivery, setDelivery] = useState("3 days");
   const [description, setDescription] = useState("");
+  const [skills, setSkills] = useState("");
+  const [budgetMin, setBudgetMin] = useState("");
+  const [budgetMax, setBudgetMax] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // Category image defaults to ensure the created gig displays beautifully in GigCard
-  const categoryImages = {
-    "Web Development": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-    "Graphic Design": "https://images.unsplash.com/photo-1626785774573-4b799315345d",
-    "Content Writing": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32",
-    "Video Editing": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d",
-    "Digital Marketing": "https://images.unsplash.com/photo-1611162617474-5b21e879e113",
-    "Music & Audio": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4",
-  };
+  const today = new Date().toLocaleDateString("en-CA");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !price || !category || !delivery) {
-      alert("Please enter title, price, category, and delivery time.");
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (!currentUser) {
+      setErrorMessage("Please log in before posting a project.");
       return;
     }
 
-    // New Gig object with dynamic seller details (Requirement 5)
-    const newGig = {
+    if (
+      !title.trim() ||
+      !category ||
+      !description.trim() ||
+      !skills.trim() ||
+      !budgetMin ||
+      !budgetMax ||
+      !deadline
+    ) {
+      setErrorMessage("Please fill in all the required fields.");
+      return;
+    }
+
+    if (Number(budgetMin) <= 0 || Number(budgetMax) <= 0) {
+      setErrorMessage("Budget must be greater than zero.");
+      return;
+    }
+
+    if (Number(budgetMin) > Number(budgetMax)) {
+      setErrorMessage(
+        "Minimum budget cannot be greater than maximum budget."
+      );
+      return;
+    }
+
+    if (deadline < today) {
+      setErrorMessage("Please select today or a future deadline.");
+      return;
+    }
+
+    const newProject = {
       title: title.trim(),
-      description:
-        description.trim() ||
-        `Professional ${category} service delivered with high quality standards.`,
-      seller: currentUser?.name || "Aman Singh",
-      sellerId: Number(currentUser?.id) || 1,
+      description: description.trim(),
+      clientId: Number(currentUser.id),
+      clientName: currentUser.name,
       category,
-      price: Number(price),
-      rating: 5.0,
-      reviews: 0,
-      delivery,
-      image:
-        categoryImages[category] ||
-        "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+      skills: skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter((skill) => skill !== ""),
+      budgetMin: Number(budgetMin),
+      budgetMax: Number(budgetMax),
+      deadline,
+      status: "open",
+      createdAt: new Date().toISOString().slice(0, 10),
     };
 
     try {
       setIsSubmitting(true);
 
-      // Sending POST request to json-server REST API
-      const response = await fetch("http://localhost:5000/gigs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newGig),
-      });
+      const response = await fetch(
+        "http://localhost:5000/projects",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newProject),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error(`Failed to save gig. HTTP Status: ${response.status}`);
+        throw new Error("Could not save the project.");
       }
 
-      const createdData = await response.json();
-      console.log("New gig created in json-server:", createdData);
+      await response.json();
 
-      setSuccessMessage("Gig created successfully and published to the REST API!");
-      alert("🎉 Gig created successfully! Published to REST API.");
+      setSuccessMessage("Your project was posted successfully!");
 
-      // Clear the form fields
       setTitle("");
-      setPrice("");
       setCategory("");
       setDescription("");
-      setDelivery("3 days");
+      setSkills("");
+      setBudgetMin("");
+      setBudgetMax("");
+      setDeadline("");
+    } catch (error) {
+      console.error("Error posting project:", error);
 
-      // Navigate to Explore page so the user can verify the new gig
-      navigate("/explore");
-    } catch (err) {
-      console.error("Error creating gig:", err);
-      alert(
-        "Failed to create gig. Make sure json-server is running on port 5000 (npm run server)."
+      setErrorMessage(
+        "Could not post your project. Please check that JSON Server is running on port 5000."
       );
     } finally {
       setIsSubmitting(false);
@@ -95,90 +120,95 @@ function CreateGig() {
   return (
     <div className="page create-gig">
       <div className="create-gig-header">
-        <p className="section-label">SELLER STUDIO</p>
-        <h1>Create a New Gig</h1>
+        <p className="section-label">CLIENT WORKSPACE</p>
+
+        <h1>Post a Project</h1>
+
         <p style={{ color: "var(--text-muted)", marginBottom: "20px" }}>
-          Publish your service to the GigConnect marketplace.
+          Describe your project, set your budget, and find the right
+          freelancer for your work.
         </p>
       </div>
 
       {currentUser && (
         <div className="seller-active-badge" style={{ marginBottom: "20px" }}>
-          <span>👤 Publishing as: <strong>{currentUser.name}</strong> (Seller ID: #{currentUser.id})</span>
+          <span>
+            👤 Posting as: <strong>{currentUser.name}</strong>
+          </span>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div
+          role="alert"
+          style={{
+            padding: "12px",
+            marginBottom: "16px",
+            borderRadius: "8px",
+            backgroundColor: "#fee2e2",
+            color: "#991b1b",
+          }}
+        >
+          {errorMessage}
         </div>
       )}
 
       {successMessage && (
-        <div className="alert-banner success" style={{ marginBottom: "20px" }}>
+        <div
+          role="status"
+          style={{
+            padding: "12px",
+            marginBottom: "16px",
+            borderRadius: "8px",
+            backgroundColor: "#dcfce7",
+            color: "#166534",
+          }}
+        >
           ✅ {successMessage}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="gig-form">
-        {/* Gig Title */}
-        <label>Gig Title *</label>
+        <label htmlFor="project-title">Project Title *</label>
+
         <input
+          id="project-title"
           type="text"
-          placeholder="e.g. I will build a modern responsive React website"
+          placeholder="e.g. Build a responsive React website"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          maxLength={100}
           required
         />
 
-        {/* Category */}
-        <label>Category *</label>
+        <label htmlFor="project-category">Category *</label>
+
         <select
+          id="project-category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           required
         >
-          <option value="">Select a Category</option>
-          <option>Web Development</option>
-          <option>Graphic Design</option>
-          <option>Content Writing</option>
-          <option>Video Editing</option>
-          <option>Digital Marketing</option>
-          <option>Music & Audio</option>
+          <option value="">Select a category</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Content Writing">Content Writing</option>
+          <option value="Video Editing">Video Editing</option>
+          <option value="Digital Marketing">Digital Marketing</option>
+          <option value="Music & Audio">Music & Audio</option>
         </select>
 
-        {/* Price & Delivery Time Row */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-          <div>
-            <label>Price (₹) *</label>
-            <input
-              type="number"
-              placeholder="e.g. 2500"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-              min="1"
-            />
-          </div>
+        <label htmlFor="project-description">
+          Project Description *
+        </label>
 
-          <div>
-            <label>Delivery Time *</label>
-            <select
-              value={delivery}
-              onChange={(e) => setDelivery(e.target.value)}
-              required
-            >
-              <option value="1 day">1 day</option>
-              <option value="2 days">2 days</option>
-              <option value="3 days">3 days</option>
-              <option value="5 days">5 days</option>
-              <option value="7 days">7 days</option>
-              <option value="14 days">14 days</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Description */}
-        <label>Gig Description (Optional)</label>
         <textarea
-          rows="4"
-          placeholder="Describe the deliverables, tools, and value you offer in this service..."
+          id="project-description"
+          rows="5"
+          placeholder="Explain what you need, the project requirements, and expected results..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
           style={{
             width: "100%",
             padding: "12px",
@@ -191,14 +221,88 @@ function CreateGig() {
           }}
         />
 
+        <label htmlFor="project-skills">
+          Required Skills *
+        </label>
+
+        <input
+          id="project-skills"
+          type="text"
+          placeholder="e.g. React, JavaScript, CSS"
+          value={skills}
+          onChange={(e) => setSkills(e.target.value)}
+          required
+        />
+
+        <small
+          style={{
+            display: "block",
+            color: "var(--text-muted)",
+            marginBottom: "16px",
+          }}
+        >
+          Separate skills with commas.
+        </small>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          <div>
+            <label htmlFor="budget-min">Minimum Budget (₹) *</label>
+
+            <input
+              id="budget-min"
+              type="number"
+              placeholder="e.g. 3000"
+              value={budgetMin}
+              onChange={(e) => setBudgetMin(e.target.value)}
+              min="1"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="budget-max">Maximum Budget (₹) *</label>
+
+            <input
+              id="budget-max"
+              type="number"
+              placeholder="e.g. 6000"
+              value={budgetMax}
+              onChange={(e) => setBudgetMax(e.target.value)}
+              min="1"
+              required
+            />
+          </div>
+        </div>
+
+        <label htmlFor="project-deadline">Project Deadline *</label>
+
+        <input
+          id="project-deadline"
+          type="date"
+          value={deadline}
+          min={today}
+          onChange={(e) => setDeadline(e.target.value)}
+          required
+        />
+
         <button
           type="submit"
           disabled={isSubmitting}
-          id="publish-gig-btn"
+          id="post-project-btn"
           className="order-btn"
-          style={{ width: "100%", marginTop: "16px" }}
+          style={{
+            width: "100%",
+            marginTop: "16px",
+            opacity: isSubmitting ? 0.7 : 1,
+          }}
         >
-          {isSubmitting ? "Publishing to API..." : "Publish Gig 🚀"}
+          {isSubmitting ? "Posting Project..." : "Post Project 🚀"}
         </button>
       </form>
     </div>

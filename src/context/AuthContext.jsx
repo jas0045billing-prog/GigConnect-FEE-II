@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -51,18 +52,14 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     try {
-      const existingUsers = localStorage.getItem("users");
-
-      if (!existingUsers) {
+      if (!localStorage.getItem("users")) {
         localStorage.setItem(
           "users",
           JSON.stringify(INITIAL_DEMO_USERS)
         );
       }
 
-      const existingOrders = localStorage.getItem("orders");
-
-      if (!existingOrders) {
+      if (!localStorage.getItem("orders")) {
         localStorage.setItem(
           "orders",
           JSON.stringify(INITIAL_DEMO_ORDERS)
@@ -84,46 +81,51 @@ export function AuthProvider({ children }) {
   };
 
   const login = (email, password) => {
-    const rawUsers = localStorage.getItem("users");
-    const users = rawUsers
-      ? JSON.parse(rawUsers)
-      : INITIAL_DEMO_USERS;
+    try {
+      const rawUsers = localStorage.getItem("users");
+      const users = rawUsers
+        ? JSON.parse(rawUsers)
+        : INITIAL_DEMO_USERS;
 
-    const matchedUser = users.find(
-      (user) =>
-        user.email.toLowerCase() ===
-        email.trim().toLowerCase()
-    );
+      const matchedUser = users.find(
+        (user) =>
+          user.email.toLowerCase() === email.trim().toLowerCase()
+      );
 
-    if (matchedUser) {
-      updateCurrentUser(matchedUser);
+      if (matchedUser) {
+        updateCurrentUser(matchedUser);
+
+        return {
+          success: true,
+          user: matchedUser,
+        };
+      }
+
+      const fallbackUser = {
+        id: Date.now(),
+        name: email.split("@")[0] || "User",
+        email: email.trim(),
+        role: "client",
+      };
+
+      localStorage.setItem(
+        "users",
+        JSON.stringify([...users, fallbackUser])
+      );
+
+      updateCurrentUser(fallbackUser);
 
       return {
         success: true,
-        user: matchedUser,
+        user: fallbackUser,
+      };
+    } catch (err) {
+      console.error("Login failed:", err);
+      return {
+        success: false,
+        message: "Unable to log in. Please try again.",
       };
     }
-
-    const fallbackUser = {
-      id: Date.now(),
-      name: email.split("@")[0] || "User",
-      email: email.trim(),
-      role: "buyer",
-    };
-
-    const updatedUsers = [...users, fallbackUser];
-
-    localStorage.setItem(
-      "users",
-      JSON.stringify(updatedUsers)
-    );
-
-    updateCurrentUser(fallbackUser);
-
-    return {
-      success: true,
-      user: fallbackUser,
-    };
   };
 
   const quickLogin = (user) => {
@@ -131,46 +133,52 @@ export function AuthProvider({ children }) {
   };
 
   const register = ({ name, email, password, role }) => {
-    const rawUsers = localStorage.getItem("users");
-    const users = rawUsers
-      ? JSON.parse(rawUsers)
-      : INITIAL_DEMO_USERS;
+    try {
+      const rawUsers = localStorage.getItem("users");
+      const users = rawUsers
+        ? JSON.parse(rawUsers)
+        : INITIAL_DEMO_USERS;
 
-    const existingUser = users.find(
-      (user) =>
-        user.email.toLowerCase() ===
-        email.trim().toLowerCase()
-    );
+      const normalizedEmail = email.trim().toLowerCase();
 
-    if (existingUser) {
-      updateCurrentUser(existingUser);
+      const existingUser = users.find(
+        (user) => user.email.toLowerCase() === normalizedEmail
+      );
+
+      if (existingUser) {
+        return {
+          success: false,
+          message: "An account with this email already exists. Please log in.",
+        };
+      }
+
+      const newUser = {
+        id: Date.now(),
+        name: name.trim(),
+        email: email.trim(),
+        role: role === "freelancer" || role === "seller"
+          ? role
+          : "client",
+      };
+
+      localStorage.setItem(
+        "users",
+        JSON.stringify([...users, newUser])
+      );
+
+      updateCurrentUser(newUser);
 
       return {
         success: true,
-        user: existingUser,
+        user: newUser,
+      };
+    } catch (err) {
+      console.error("Registration failed:", err);
+      return {
+        success: false,
+        message: "Unable to register. Please try again.",
       };
     }
-
-    const newUser = {
-      id: Date.now(),
-      name: name.trim(),
-      email: email.trim(),
-      role: role || "buyer",
-    };
-
-    const updatedUsers = [...users, newUser];
-
-    localStorage.setItem(
-      "users",
-      JSON.stringify(updatedUsers)
-    );
-
-    updateCurrentUser(newUser);
-
-    return {
-      success: true,
-      user: newUser,
-    };
   };
 
   const logout = () => {
@@ -186,8 +194,23 @@ export function AuthProvider({ children }) {
         logout,
         quickLogin,
         isLoggedIn: !!currentUser,
-        isBuyer: currentUser?.role === "buyer",
-        isSeller: currentUser?.role === "seller",
+
+        // Support both old and new role names
+        isClient:
+          currentUser?.role === "client" ||
+          currentUser?.role === "buyer",
+
+        isFreelancer:
+          currentUser?.role === "freelancer" ||
+          currentUser?.role === "seller",
+
+        isBuyer:
+          currentUser?.role === "buyer" ||
+          currentUser?.role === "client",
+
+        isSeller:
+          currentUser?.role === "seller" ||
+          currentUser?.role === "freelancer",
       }}
     >
       {children}
@@ -206,4 +229,3 @@ export function useAuth() {
 
   return context;
 }
-

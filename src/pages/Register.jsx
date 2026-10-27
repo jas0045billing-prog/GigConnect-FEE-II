@@ -2,19 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-// ============================================================================
-// VIVA EXPLANATION: User Registration with Role Selection (Buyer vs Seller)
-// 1. Role Assignment: Enables user to select "buyer" or "seller" at registration.
-// 2. Storage: Serializes new user object into localStorage ('users' and 'currentUser').
-// 3. Educational Context: Explains that in a full-stack system, this executes:
-//    INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?);
-// ============================================================================
-
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("buyer"); // Default to Buyer
+  const [role, setRole] = useState("client");
   const [error, setError] = useState(null);
 
   const { register } = useAuth();
@@ -24,6 +16,7 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(null);
 
     if (!name.trim() || !email.trim() || !password.trim()) {
       setError("Please fill in all required fields.");
@@ -39,15 +32,23 @@ function Register() {
       });
 
       if (result.success) {
-        alert(`🎉 Account created successfully as ${role.toUpperCase()}!`);
-        // Navigate based on selected role or redirect target
+        alert(
+          `🎉 Account created successfully as ${
+            role === "client" ? "CLIENT" : "FREELANCER"
+          }!`
+        );
+
         if (redirectTo) {
           navigate(redirectTo, { replace: true });
-        } else if (role === "seller") {
+        } else if (role === "freelancer") {
           navigate("/dashboard");
         } else {
           navigate("/explore");
         }
+      } else {
+        setError(
+          result.message || "Failed to create account. Please try again."
+        );
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -59,10 +60,13 @@ function Register() {
     <div className="page auth-page">
       <div className="auth-box">
         <h1>Create Account</h1>
-        <p>Join GigConnect to hire or offer services</p>
+        <p>Join GigConnect to hire freelancers or offer your skills</p>
 
         {error && (
-          <div className="alert-banner danger" style={{ marginBottom: "20px" }}>
+          <div
+            className="alert-banner danger"
+            style={{ marginBottom: "20px" }}
+          >
             ⚠️ {error}
           </div>
         )}
@@ -95,46 +99,61 @@ function Register() {
             required
           />
 
-          {/* Role Selection (Requirement 2) */}
-          <label style={{ marginTop: "20px" }}>I want to join as: *</label>
+          <label style={{ marginTop: "20px" }}>
+            I want to join as: *
+          </label>
+
           <div className="role-selector-grid">
             <label
-              className={`role-option ${role === "buyer" ? "selected" : ""}`}
-              onClick={() => setRole("buyer")}
+              className={`role-option ${
+                role === "client" ? "selected" : ""
+              }`}
+              onClick={() => setRole("client")}
             >
               <input
                 type="radio"
                 name="role"
-                value="buyer"
-                checked={role === "buyer"}
-                onChange={() => setRole("buyer")}
+                value="client"
+                checked={role === "client"}
+                onChange={() => setRole("client")}
                 style={{ display: "none" }}
               />
-              <div className="role-icon">🛒</div>
-              <div className="role-title">Buyer</div>
-              <div className="role-desc">I want to hire freelancers & order gigs</div>
+              <div className="role-icon">🧑‍💼</div>
+              <div className="role-title">Client</div>
+              <div className="role-desc">
+                I want to post projects and hire freelancers
+              </div>
             </label>
 
             <label
-              className={`role-option ${role === "seller" ? "selected" : ""}`}
-              onClick={() => setRole("seller")}
+              className={`role-option ${
+                role === "freelancer" ? "selected" : ""
+              }`}
+              onClick={() => setRole("freelancer")}
             >
               <input
                 type="radio"
                 name="role"
-                value="seller"
-                checked={role === "seller"}
-                onChange={() => setRole("seller")}
+                value="freelancer"
+                checked={role === "freelancer"}
+                onChange={() => setRole("freelancer")}
                 style={{ display: "none" }}
               />
-              <div className="role-icon">💼</div>
-              <div className="role-title">Seller</div>
-              <div className="role-desc">I want to create gigs & offer services</div>
+              <div className="role-icon">💻</div>
+              <div className="role-title">Freelancer</div>
+              <div className="role-desc">
+                I want to find projects and offer my skills
+              </div>
             </label>
           </div>
 
-          <button type="submit" id="register-submit-btn" style={{ marginTop: "24px" }}>
-            Create Account as {role === "buyer" ? "Buyer" : "Seller"}
+          <button
+            type="submit"
+            id="register-submit-btn"
+            style={{ marginTop: "24px" }}
+          >
+            Create Account as{" "}
+            {role === "client" ? "Client" : "Freelancer"}
           </button>
         </form>
 

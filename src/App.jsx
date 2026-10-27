@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -17,9 +18,11 @@ import Register from "./pages/Register";
 import Orders from "./pages/Orders";
 import Dashboard from "./pages/Dashboard";
 import CreateGig from "./pages/CreateGig";
+import MyProjects from "./pages/MyProjects";
 import ManageOrders from "./pages/ManageOrders";
 
 import NotFound from "./pages/NotFound";
+
 
 import ExploreProjects from "./pages/ExploreProjects";
 import ProjectDetails from "./pages/ProjectDetails";
@@ -31,6 +34,8 @@ import MyProposals from "./pages/MyProposals";
 // 2. ThemeProvider: Provides dynamic dark/light mode context.
 // 3. ProtectedRoute: Enforces authentication and role-based permissions at the route level.
 // ============================================================================
+
+
 
 function App() {
   return (
@@ -85,7 +90,10 @@ function App() {
 />
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Navigate to="/" replace />} />
+                <Route
+                  path="/home"
+                  element={<Navigate to="/" replace />}
+                />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/gig/:id" element={<GigDetails />} />
                 <Route path="/seller/:id" element={<SellerProfile />} />
@@ -94,59 +102,75 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
-                {/* Buyer Protected Route (Requirement 9 & 15) */}
+                {/* Existing Orders Route */}
                 <Route
                   path="/orders"
                   element={
                     <ProtectedRoute
                       requiredRole="buyer"
-                      customGuestMessage="Please login or signup to view your orders."
-                      deniedMessage="This orders section is for buyers. Sellers can track client orders in Manage Orders."
+                      customGuestMessage="Please log in to view your orders."
+                      deniedMessage="This section is for buyers."
                     >
                       <Orders />
                     </ProtectedRoute>
                   }
                 />
 
-                {/* Seller Protected Route: Create Gig (Requirement 4, 5 & 15) */}
+                {/* Client Route: Post a Project */}
                 <Route
                   path="/create-gig"
                   element={
                     <ProtectedRoute
-                      requiredRole="seller"
-                      customGuestMessage="Please login or signup as a seller to create a gig."
-                      deniedMessage="Only sellers can create gigs."
+                      requiredRole="client"
+                      customGuestMessage="Please log in or sign up as a client to post a project."
+                      deniedMessage="Only clients can post projects."
                     >
                       <CreateGig />
                     </ProtectedRoute>
                   }
                 />
 
-                {/* Seller Protected Route: Manage Orders (Requirement 11 & 15) */}
+                {/* Client Route: My Projects */}
+                <Route
+                  path="/my-projects"
+                  element={
+                    <ProtectedRoute
+                      requiredRole="client"
+                      customGuestMessage="Please log in or sign up to view your projects."
+                      deniedMessage="Only clients can view their projects."
+                    >
+                      <MyProjects />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Existing Seller Route: Manage Orders */}
                 <Route
                   path="/manage-orders"
                   element={
                     <ProtectedRoute
                       requiredRole="seller"
-                      customGuestMessage="Please login or signup as a seller to manage orders."
-                      deniedMessage="Only sellers can access the Manage Orders panel."
+                      customGuestMessage="Please log in as a seller to manage orders."
+                      deniedMessage="Only sellers can access Manage Orders."
                     >
                       <ManageOrders />
                     </ProtectedRoute>
                   }
                 />
 
-                {/* Common Protected Route: Dashboard (Requirement 12, 13 & 15) */}
+                {/* Common Protected Route: Dashboard */}
                 <Route
                   path="/dashboard"
                   element={
-                    <ProtectedRoute customGuestMessage="Please login or signup to access your dashboard.">
+                    <ProtectedRoute
+                      customGuestMessage="Please log in to access your dashboard."
+                    >
                       <Dashboard />
                     </ProtectedRoute>
                   }
                 />
 
-                {/* 404 - Keep this LAST */}
+                {/* 404 Route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
