@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "./authContext";
 
-
 const DEMO_PASSWORD = "Demo@123";
 
 const INITIAL_DEMO_USERS = [
@@ -43,6 +42,14 @@ const INITIAL_DEMO_ORDERS = [
   },
 ];
 
+// Convert old role names to the new role names.
+const normalizeRole = (role) => {
+  if (role === "buyer") return "client";
+  if (role === "seller") return "freelancer";
+
+  return role === "freelancer" ? "freelancer" : "client";
+};
+
 // Never expose the stored password through the current-user object.
 const sanitizeUser = (user) =>
   Object.fromEntries(
@@ -53,7 +60,15 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem("currentUser");
-      return savedUser ? JSON.parse(savedUser) : null;
+
+      if (!savedUser) return null;
+
+      const user = JSON.parse(savedUser);
+
+      return {
+        ...user,
+        role: normalizeRole(user.role),
+      };
     } catch (err) {
       console.error("Failed to load current user:", err);
       return null;
@@ -65,7 +80,10 @@ export function AuthProvider({ children }) {
       const savedUsers = localStorage.getItem("users");
 
       if (!savedUsers) {
-        localStorage.setItem("users", JSON.stringify(INITIAL_DEMO_USERS));
+        localStorage.setItem(
+          "users",
+          JSON.stringify(INITIAL_DEMO_USERS)
+        );
       } else {
         // Upgrade existing demo accounts created before password support.
         const users = JSON.parse(savedUsers);
@@ -76,14 +94,31 @@ export function AuthProvider({ children }) {
               demo.email.toLowerCase() === user.email?.toLowerCase()
           );
 
-          if (demoUser && !user.password) {
-            return { ...user, password: demoUser.password };
-          }
-
-          return user;
+          return {
+            ...user,
+            role: normalizeRole(user.role),
+            ...(demoUser && !user.password
+              ? { password: demoUser.password }
+              : {}),
+          };
         });
 
         localStorage.setItem("users", JSON.stringify(upgradedUsers));
+      }
+
+      // Normalize the saved session without updating React state here.
+      const savedCurrentUser = localStorage.getItem("currentUser");
+
+      if (savedCurrentUser) {
+      const user = JSON.parse(savedCurrentUser);
+      
+      localStorage.setItem(
+      "currentUser",
+      JSON.stringify({
+      ...user,
+      role: normalizeRole(user.role),
+      })
+      );
       }
 
       if (!localStorage.getItem("orders")) {
@@ -99,7 +134,13 @@ export function AuthProvider({ children }) {
 
   const updateCurrentUser = (user) => {
     if (user) {
-      const safeUser = sanitizeUser(user);
+      const normalizedUser = {
+        ...user,
+        role: normalizeRole(user.role),
+      };
+
+      const safeUser = sanitizeUser(normalizedUser);
+
       localStorage.setItem("currentUser", JSON.stringify(safeUser));
       setCurrentUser(safeUser);
     } else {
@@ -136,11 +177,16 @@ export function AuthProvider({ children }) {
         };
       }
 
-      updateCurrentUser(matchedUser);
+      const normalizedUser = {
+        ...matchedUser,
+        role: normalizeRole(matchedUser.role),
+      };
+
+      updateCurrentUser(normalizedUser);
 
       return {
         success: true,
-        user: sanitizeUser(matchedUser),
+        user: sanitizeUser(normalizedUser),
       };
     } catch (err) {
       console.error("Login failed:", err);
@@ -180,8 +226,7 @@ export function AuthProvider({ children }) {
       if (existingUser) {
         return {
           success: false,
-          message:
-            "An account with this email already exists. Please log in.",
+          message: "An account with this email already exists. Please log in.",
         };
       }
 
@@ -190,12 +235,7 @@ export function AuthProvider({ children }) {
         name: name.trim(),
         email: normalizedEmail,
         password,
-        role:
-          role === "freelancer" || role === "seller"
-            ? role
-            : role === "buyer"
-              ? "buyer"
-              : "client",
+        role: normalizeRole(role),
       };
 
       localStorage.setItem(
@@ -233,21 +273,12 @@ export function AuthProvider({ children }) {
         quickLogin,
         isLoggedIn: !!currentUser,
 
-        isClient:
-          currentUser?.role === "client" ||
-          currentUser?.role === "buyer",
+        isClient: currentUser?.role === "client",
+        isFreelancer: currentUser?.role === "freelancer",
 
-        isFreelancer:
-          currentUser?.role === "freelancer" ||
-          currentUser?.role === "seller",
-
-        isBuyer:
-          currentUser?.role === "buyer" ||
-          currentUser?.role === "client",
-
-        isSeller:
-          currentUser?.role === "seller" ||
-          currentUser?.role === "freelancer",
+        // Keep these aliases temporarily if older components use them.
+        isBuyer: currentUser?.role === "client",
+        isSeller: currentUser?.role === "freelancer",
       }}
     >
       {children}

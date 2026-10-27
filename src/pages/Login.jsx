@@ -40,18 +40,18 @@ function Login() {
 
   const handleQuickDemo = (role) => {
     const user =
-      role === "buyer"
+      role === "client"
         ? {
             id: 3,
-            name: "Demo Buyer",
-            email: "buyer@demo.com",
-            role: "buyer",
+            name: "Demo Client",
+            email: "client@demo.com",
+            role: "client",
           }
         : {
             id: 1,
-            name: "Demo Seller",
-            email: "seller@demo.com",
-            role: "seller",
+            name: "Demo Freelancer",
+            email: "freelancer@demo.com",
+            role: "freelancer",
           };
 
     quickLogin(user);
@@ -105,17 +105,17 @@ function Login() {
             <button
               type="button"
               className="quick-demo-btn buyer"
-              onClick={() => handleQuickDemo("buyer")}
+              onClick={() => handleQuickDemo("client")}
             >
-              👤 Demo Buyer
+              👤 Demo Client
             </button>
 
             <button
               type="button"
               className="quick-demo-btn seller"
-              onClick={() => handleQuickDemo("seller")}
+              onClick={() => handleQuickDemo("freelancer")}
             >
-              💼 Demo Seller
+              💼 Demo Freelancer
             </button>
           </div>
         </div>
