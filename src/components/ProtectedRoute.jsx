@@ -12,8 +12,8 @@ function ProtectedRoute({
 
   if (!currentUser) {
     const defaultMsg =
-      requiredRole === "seller"
-        ? "Please login or signup as a seller to create a gig."
+      requiredRole === "seller" || requiredRole === "freelancer"
+        ? "Please login or signup as a freelancer to continue."
         : "Please login or signup to continue.";
 
     return (
@@ -28,7 +28,19 @@ function ProtectedRoute({
     );
   }
 
-  if (requiredRole && currentUser.role !== requiredRole) {
+  // Support both the old and new role names
+  const isClient =
+    currentUser.role === "client" || currentUser.role === "buyer";
+
+  const isFreelancer =
+    currentUser.role === "freelancer" || currentUser.role === "seller";
+
+  const hasRequiredRole =
+    !requiredRole ||
+    (["client", "buyer"].includes(requiredRole) && isClient) ||
+    (["freelancer", "seller"].includes(requiredRole) && isFreelancer);
+
+  if (!hasRequiredRole) {
     return (
       <div className="page auth-page">
         <div className="auth-box" style={{ textAlign: "center" }}>
@@ -47,9 +59,10 @@ function ProtectedRoute({
             }}
           >
             {deniedMessage ||
-              (requiredRole === "seller"
-                ? "Only sellers can create gigs."
-                : "This page is reserved for buyers.")}
+              (requiredRole === "seller" ||
+              requiredRole === "freelancer"
+                ? "Only freelancers can access this page."
+                : "Only clients can access this page.")}
           </p>
 
           <p
@@ -82,7 +95,7 @@ function ProtectedRoute({
               Back to Home
             </Link>
 
-            {currentUser.role === "buyer" && (
+            {isClient && (
               <Link
                 to="/orders"
                 className="order-btn"
@@ -95,7 +108,7 @@ function ProtectedRoute({
               </Link>
             )}
 
-            {currentUser.role === "seller" && (
+            {isFreelancer && (
               <Link
                 to="/manage-orders"
                 className="order-btn"

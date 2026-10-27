@@ -11,6 +11,12 @@ function Navbar() {
     navigate("/");
   };
 
+  const isClient =
+    currentUser?.role === "client" || currentUser?.role === "buyer";
+
+  const isFreelancer =
+    currentUser?.role === "freelancer" || currentUser?.role === "seller";
+
   return (
     <nav className="navbar">
       <div className="nav-container">
@@ -22,51 +28,82 @@ function Navbar() {
         {/* Navigation Links */}
         <div className="nav-links">
           <Link to="/">Home</Link>
-          <Link to="/explore">Explore</Link>
+          <Link to="/explore">Explore Projects</Link>
 
           {/* Guest Links */}
           {!currentUser && (
             <>
               <ThemeToggle />
+
               <Link to="/login" className="login-btn">
                 Login
               </Link>
+
               <Link to="/register" className="signup-nav-btn">
                 Signup
               </Link>
             </>
           )}
 
-          {/* Buyer Links */}
-          {currentUser && currentUser.role === "buyer" && (
+          {/* Client Links */}
+          {currentUser && isClient && (
             <>
-              <Link to="/orders">My Orders</Link>
+              <Link to="/create-gig">Post a Project</Link>
+
+              <Link to="/my-projects">My Projects</Link>
+
               <Link to="/dashboard">Dashboard</Link>
+
               <ThemeToggle />
+
               <div className="nav-user-badge">
                 <span className="user-icon">👤</span>
-                <span className="user-name">{currentUser.name}</span>
-                <span className="role-tag buyer">Buyer</span>
+
+                <span className="user-name">
+                  {currentUser.name}
+                </span>
+
+                <span className="role-tag buyer">
+                  Client
+                </span>
               </div>
-              <button onClick={handleLogout} className="logout-btn" title="Logout">
+
+              <button
+                onClick={handleLogout}
+                className="logout-btn"
+                title="Logout"
+              >
                 Logout
               </button>
             </>
           )}
 
-          {/* Seller Links */}
-          {currentUser && currentUser.role === "seller" && (
+          {/* Freelancer Links */}
+          {currentUser && isFreelancer && (
             <>
-              <Link to="/create-gig">Create Gig</Link>
-              <Link to="/manage-orders">Manage Orders</Link>
+              <Link to="/my-proposals">My Proposals</Link>
+
               <Link to="/dashboard">Dashboard</Link>
+
               <ThemeToggle />
+
               <div className="nav-user-badge">
                 <span className="user-icon">👤</span>
-                <span className="user-name">{currentUser.name}</span>
-                <span className="role-tag seller">Seller</span>
+
+                <span className="user-name">
+                  {currentUser.name}
+                </span>
+
+                <span className="role-tag seller">
+                  Freelancer
+                </span>
               </div>
-              <button onClick={handleLogout} className="logout-btn" title="Logout">
+
+              <button
+                onClick={handleLogout}
+                className="logout-btn"
+                title="Logout"
+              >
                 Logout
               </button>
             </>

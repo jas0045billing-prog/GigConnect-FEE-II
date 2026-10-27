@@ -201,5 +201,49 @@
       "role": "buyer",
       "title": "Product Manager"
     }
-  ]
+  ],
+  "projects": [
+    {
+      "title": "Build a Responsive E-Commerce Website",
+      "description": "I am looking for a developer to build a modern, responsive e-commerce website for an online business. The website should include a homepage, product listings, product details, a shopping cart, and a user-friendly interface. The design should work smoothly on desktops, tablets, and mobile devices.",
+      "clientId": 1,
+      "clientName": "Demo Seller",
+      "category": "Web Development",
+      "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React.js",
+        "Responsive Web Design"
+      ],
+      "budgetMin": 5000,
+      "budgetMax": 15000,
+      "deadline": "2026-11-26",
+      "status": "open",
+      "createdAt": "2026-10-26",
+      "id": 1
+    },
+    {
+      "title": "Build a Responsive E-Commerce Website",
+      "description": "hi",
+      "clientId": 1793084981110,
+      "clientName": "jaspreet kaur",
+      "category": "Content Writing",
+      "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React.js",
+        "Responsive Web Design"
+      ],
+      "budgetMin": 3000,
+      "budgetMax": 12980,
+      "deadline": "2027-02-06",
+      "status": "open",
+      "createdAt": "2026-10-27",
+      "id": 2
+    }
+  ],
+  "proposals": [],
+  "assignments": []
 }
