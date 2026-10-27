@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const API = "http://localhost:5000";
 
@@ -38,7 +38,7 @@ function ProjectDetails() {
         const projectData = await projectResponse.json();
 
         let proposalData = [];
-        if (currentUser?.role === "seller") {
+        if (currentUser?.role === "seller" || currentUser?.role === "freelancer") {
           const proposalResponse = await fetch(
             `${API}/proposals?projectId=${encodeURIComponent(id)}`
           );
@@ -98,7 +98,7 @@ function ProjectDetails() {
       return;
     }
 
-    if (currentUser.role !== "seller") {
+    if (currentUser.role !== "seller" && currentUser.role !== "freelancer") {
       setError("Only freelancer accounts can submit proposals.");
       return;
     }
@@ -270,7 +270,7 @@ function ProjectDetails() {
           </p>
         )}
 
-        {currentUser?.role === "buyer" && (
+        {(currentUser?.role === "client" || currentUser?.role === "buyer")&& (
           <p>Client accounts cannot submit freelancer proposals.</p>
         )}
 
@@ -284,7 +284,7 @@ function ProjectDetails() {
           </div>
         )}
 
-        {currentUser?.role === "seller" && isOpen && !existingProposal && (
+        {(currentUser?.role === "seller" || currentUser?.role === "freelancer")&& isOpen && !existingProposal && (
           <section className="proposal-form-section">
             <h2>Submit Your Proposal</h2>
             <p>Offer a price and timeline that you can realistically deliver.</p>

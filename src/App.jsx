@@ -1,14 +1,13 @@
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider } from "./context/ThemeContext";
-import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
-import Explore from "./pages/Explore";
 import GigDetails from "./pages/GigDetails";
 import SellerProfile from "./pages/SellerProfile";
 

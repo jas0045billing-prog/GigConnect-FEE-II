@@ -1,36 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
-// ============================================================================
-// VIVA EXPLANATION: Buyer Orders & Immediate Order Cancellation
-// 1. Array Filtering: order.buyerId === currentUser.id ensures strict data isolation
-//    so buyers never see orders belonging to others.
-// 2. Order Cancellation: Updates the status from "Pending"/"In Progress" to "Cancelled"
-//    both in localStorage and React component state for instant UI re-render.
-// 3. Conditional Button Rendering: The "Cancel Order" button is hidden when an order
-//    is already "Completed" or "Cancelled".
-// ============================================================================
 
 function Orders() {
   const { currentUser } = useAuth();
-  const [orders, setOrders] = useState([]);
 
-  // Load orders from localStorage and filter for the logged-in buyer
-  useEffect(() => {
-    try {
-      const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-      // Filter strictly by buyer ID or buyer name (Requirement 9)
-      const buyerOrders = storedOrders.filter(
-        (order) =>
-          Number(order.buyerId) === Number(currentUser?.id) ||
-          order.buyer === currentUser?.name
-      );
-      setOrders(buyerOrders);
-    } catch (err) {
-      console.error("Error reading orders from localStorage:", err);
-    }
-  }, [currentUser]);
+const [orders, setOrders] = useState(() => {
+  try {
+    const storedOrders = JSON.parse(
+      localStorage.getItem("orders") || "[]"
+    );
+
+    return storedOrders.filter(
+      (order) =>
+        Number(order.buyerId) === Number(currentUser?.id) ||
+        order.buyer === currentUser?.name
+    );
+  } catch (err) {
+    console.error("Error reading orders from localStorage:", err);
+    return [];
+  }
+});
 
   // Handle Order Cancellation (Requirement 10)
   const handleCancelOrder = (orderId) => {

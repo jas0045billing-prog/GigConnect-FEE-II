@@ -2,23 +2,13 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import GigCard from "../components/GigCard";
 
-// ============================================================================
-// VIVA EXPLANATION: REST API Consumption (GET /gigs) & Filter Synchronization
-// 1. fetch("http://localhost:5000/gigs"): Asynchronously calls the mock json-server REST API.
-// 2. async/await: Cleaner syntactic sugar for handling Promises without chaining .then().
-// 3. useSearchParams: Synchronizes query string (?search=react&category=Web+Development)
-//    with React component state for bookmarkable, shareable URLs.
-// 4. Combined Filtering: Demonstrates client-side multi-parameter array filtering.
-// ============================================================================
 
 function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Search and category filter state from URL parameters
-  const [search, setSearch] = useState(searchParams.get("search") || "");
-  const [selectedCategory, setSelectedCategory] = useState(
-    searchParams.get("category") || ""
-  );
+  const search = searchParams.get("search") || "";
+  const selectedCategory = searchParams.get("category") || "";
 
   // State to store gigs fetched from the REST API, plus loading and error indicators
   const [gigs, setGigs] = useState([]);
@@ -34,11 +24,6 @@ function Explore() {
     "Music & Audio",
   ];
 
-  // Update internal states when URL params change (e.g. via browser back/forward)
-  useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-    setSelectedCategory(searchParams.get("category") || "");
-  }, [searchParams]);
 
   // Fetch all gigs from json-server REST API
   useEffect(() => {
@@ -69,9 +54,14 @@ function Explore() {
 
   // Handle search input typing
   const handleSearchChange = (e) => {
-    setSearch(e.target.value);
-  };
+  const value = e.target.value;
+  const params = {};
 
+  if (value) params.search = value;
+  if (selectedCategory) params.category = selectedCategory;
+
+  setSearchParams(params, { replace: true });
+};
   // Submit search via form or Search button click (Requirement 7)
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
@@ -85,8 +75,6 @@ function Explore() {
 
   // Handle category button click (combines with active search query)
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-
     const params = {};
     if (search.trim()) params.search = search.trim();
     if (category) params.category = category;
@@ -96,8 +84,6 @@ function Explore() {
 
   // Reset all filters
   const handleClearFilters = () => {
-    setSearch("");
-    setSelectedCategory("");
     setSearchParams({});
   };
 
@@ -145,7 +131,6 @@ function Explore() {
             type="button"
             className="clear-search-btn"
             onClick={() => {
-              setSearch("");
               const params = {};
               if (selectedCategory) params.category = selectedCategory;
               setSearchParams(params);

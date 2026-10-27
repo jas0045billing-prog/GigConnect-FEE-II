@@ -186,7 +186,13 @@
       "email": "aman@example.com",
       "role": "seller",
       "title": "Full Stack Web Developer",
-      "skills": ["React", "JavaScript", "Node.js", "Python", "REST APIs"],
+      "skills": [
+        "React",
+        "JavaScript",
+        "Node.js",
+        "Python",
+        "REST APIs"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -197,7 +203,11 @@
       "email": "simran@example.com",
       "role": "seller",
       "title": "Brand & Logo Designer",
-      "skills": ["Logo Design", "Branding", "Illustrator"],
+      "skills": [
+        "Logo Design",
+        "Branding",
+        "Illustrator"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -219,7 +229,11 @@
       "email": "arjun@example.com",
       "role": "seller",
       "title": "Professional Video Editor",
-      "skills": ["Video Editing", "Color Grading", "Motion Graphics"],
+      "skills": [
+        "Video Editing",
+        "Color Grading",
+        "Motion Graphics"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -230,7 +244,11 @@
       "email": "karan@example.com",
       "role": "seller",
       "title": "SEO Content Writer",
-      "skills": ["SEO", "Blog Writing", "Copywriting"],
+      "skills": [
+        "SEO",
+        "Blog Writing",
+        "Copywriting"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -241,7 +259,11 @@
       "email": "neha@example.com",
       "role": "seller",
       "title": "Digital Marketing Specialist",
-      "skills": ["SEO", "Social Media", "Google Ads"],
+      "skills": [
+        "SEO",
+        "Social Media",
+        "Google Ads"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -252,7 +274,11 @@
       "email": "rishi@example.com",
       "role": "seller",
       "title": "Music Producer",
-      "skills": ["Audio Production", "Music Composition", "Sound Design"],
+      "skills": [
+        "Audio Production",
+        "Music Composition",
+        "Sound Design"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
@@ -263,13 +289,51 @@
       "email": "mehak@example.com",
       "role": "seller",
       "title": "UI/UX Designer",
-      "skills": ["Figma", "Wireframing", "Prototyping", "UI Design"],
+      "skills": [
+        "Figma",
+        "Wireframing",
+        "Prototyping",
+        "UI Design"
+      ],
       "completedProjects": 0,
       "averageRating": 0,
       "totalReviews": 0
     }
   ],
-  "projects": [],
-  "proposals": [],
+  "projects": [
+    {
+      "title": "Build a Responsive E-Commerce Website",
+      "description": "I want to develop a responsive e-commerce website where users can browse products, view product details, add items to their cart, and place orders. The website should have a clean design and work smoothly on mobile and desktop devices.",
+      "clientId": 3,
+      "clientName": "Demo Buyer",
+      "category": "Web Development",
+      "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React.js",
+        "Responsive Web Design"
+      ],
+      "budgetMin": 5000,
+      "budgetMax": 15000,
+      "deadline": "2026-11-26",
+      "status": "assigned",
+      "createdAt": "2026-10-27",
+      "id": 1
+    }
+  ],
+  "proposals": [
+    {
+      "projectId": 1,
+      "freelancerId": 1,
+      "freelancerName": "Demo Seller",
+      "proposedPrice": 8000,
+      "deliveryDays": 12,
+      "coverLetter": "Hello! I’m interested in your project and can build a responsive, user-friendly e-commerce website using React.js, HTML, CSS, and JavaScript. I’ll focus on clean design, smooth navigation, and essential features like product listings, a shopping cart, and order placement. I look forward to bringing your idea to life!",
+      "status": "accepted",
+      "createdAt": "2026-10-27T19:34:19.609Z",
+      "id": 1
+    }
+  ],
   "assignments": []
 }

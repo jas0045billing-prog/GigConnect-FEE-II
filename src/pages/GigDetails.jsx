@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
-// ============================================================================
-// VIVA EXPLANATION: Single Resource Fetching (GET /gigs/:id) & Order Placement
-// 1. useParams(): Extracts dynamic path parameter :id from the route /gig/:id.
-// 2. Auth Verification: Before placing an order, ensures the user is authenticated.
-// 3. Guest Redirection: Non-logged in visitors are routed to /login with state messages.
-// 4. Role Validation: Sellers are prevented from purchasing their own services.
-// 5. Relational Order Object: Contains foreign keys (gigId, sellerId, buyerId) ready for MySQL.
-// ============================================================================
+import { useAuth } from "../context/useAuth";
 
 function GigDetails() {
   const { id } = useParams();

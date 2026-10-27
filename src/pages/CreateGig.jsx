@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 function CreateGig() {
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");

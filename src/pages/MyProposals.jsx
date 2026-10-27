@@ -1,7 +1,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const API = "http://localhost:5000";
 
@@ -16,7 +16,6 @@ function MyProposals() {
 
   const loadData = useCallback(async () => {
     try {
-      setLoading(true);
       setError("");
 
       const [proposalResponse, projectResponse, assignmentResponse] =
@@ -56,8 +55,60 @@ function MyProposals() {
   }, [currentUser.id]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+  let cancelled = false;
+
+  async function fetchData() {
+    try {
+      setError("");
+
+      const [proposalResponse, projectResponse, assignmentResponse] =
+        await Promise.all([
+          fetch(
+            `${API}/proposals?freelancerId=${encodeURIComponent(currentUser.id)}`
+          ),
+          fetch(`${API}/projects`),
+          fetch(
+            `${API}/assignments?freelancerId=${encodeURIComponent(currentUser.id)}`
+          ),
+        ]);
+
+      if (
+        !proposalResponse.ok ||
+        !projectResponse.ok ||
+        !assignmentResponse.ok
+      ) {
+        throw new Error("Unable to load proposal information.");
+      }
+
+      const [proposalData, projectData, assignmentData] =
+        await Promise.all([
+          proposalResponse.json(),
+          projectResponse.json(),
+          assignmentResponse.json(),
+        ]);
+
+      if (!cancelled) {
+        setProposals(proposalData);
+        setProjects(projectData);
+        setAssignments(assignmentData);
+      }
+    } catch (err) {
+      if (!cancelled) {
+        setError(err.message || "Could not load your proposals.");
+      }
+    } finally {
+      if (!cancelled) {
+        setLoading(false);
+      }
+    }
+  }
+
+  fetchData();
+
+  return () => {
+    cancelled = true;
+  };
+}, [currentUser.id]);
 
   if (loading) {
     return <main className="page"><p>Loading your proposals...</p></main>;

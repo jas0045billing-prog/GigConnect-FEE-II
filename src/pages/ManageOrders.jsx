@@ -1,35 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
-// ============================================================================
-// VIVA EXPLANATION: Seller Order Tracking & Status Updates
-// 1. Filter: order.sellerId === currentUser.id ensures sellers only see their gigs' orders.
-// 2. State Mutation & localStorage: When seller updates status (Pending -> In Progress -> Completed),
-//    we update the master orders array in localStorage and update component state for instant UI re-rendering.
-// 3. DBMS Equivalent: In MySQL, this corresponds to:
-//    UPDATE orders SET status = 'Completed' WHERE id = ? AND seller_id = ?;
-// ============================================================================
 
 function ManageOrders() {
   const { currentUser } = useAuth();
-  const [orders, setOrders] = useState([]);
 
-  // Load orders on component mount
-  useEffect(() => {
-    try {
-      const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-      // Filter orders where seller matches currently logged-in seller
-      const sellerOrders = storedOrders.filter(
-        (order) =>
-          Number(order.sellerId) === Number(currentUser?.id) ||
-          order.seller === currentUser?.name
-      );
-      setOrders(sellerOrders);
-    } catch (err) {
-      console.error("Error loading seller orders:", err);
-    }
-  }, [currentUser]);
+const [orders, setOrders] = useState(() => {
+  try {
+    const storedOrders = JSON.parse(
+      localStorage.getItem("orders") || "[]"
+    );
+
+    return storedOrders.filter(
+      (order) =>
+        Number(order.sellerId) === Number(currentUser?.id) ||
+        order.seller === currentUser?.name
+    );
+  } catch (err) {
+    console.error("Error loading seller orders:", err);
+    return [];
+  }
+});
 
   // Handle status update
   const handleStatusChange = (orderId, newStatus) => {

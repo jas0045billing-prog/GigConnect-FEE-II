@@ -1,25 +1,29 @@
+import { useState, useEffect } from "react";
+import { AuthContext } from "./authContext";
 
-import { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext();
+const DEMO_PASSWORD = "Demo@123";
 
 const INITIAL_DEMO_USERS = [
   {
     id: 1,
     name: "Demo Seller",
     email: "seller@demo.com",
+    password: DEMO_PASSWORD,
     role: "seller",
   },
   {
     id: 2,
     name: "Demo Seller 2",
     email: "seller2@demo.com",
+    password: DEMO_PASSWORD,
     role: "seller",
   },
   {
     id: 3,
     name: "Demo Buyer",
     email: "buyer@demo.com",
+    password: DEMO_PASSWORD,
     role: "buyer",
   },
 ];
@@ -39,6 +43,12 @@ const INITIAL_DEMO_ORDERS = [
   },
 ];
 
+// Never expose the stored password through the current-user object.
+const sanitizeUser = (user) =>
+  Object.fromEntries(
+    Object.entries(user).filter(([key]) => key !== "password")
+  );
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
@@ -52,11 +62,28 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     try {
-      if (!localStorage.getItem("users")) {
-        localStorage.setItem(
-          "users",
-          JSON.stringify(INITIAL_DEMO_USERS)
-        );
+      const savedUsers = localStorage.getItem("users");
+
+      if (!savedUsers) {
+        localStorage.setItem("users", JSON.stringify(INITIAL_DEMO_USERS));
+      } else {
+        // Upgrade existing demo accounts created before password support.
+        const users = JSON.parse(savedUsers);
+
+        const upgradedUsers = users.map((user) => {
+          const demoUser = INITIAL_DEMO_USERS.find(
+            (demo) =>
+              demo.email.toLowerCase() === user.email?.toLowerCase()
+          );
+
+          if (demoUser && !user.password) {
+            return { ...user, password: demoUser.password };
+          }
+
+          return user;
+        });
+
+        localStorage.setItem("users", JSON.stringify(upgradedUsers));
       }
 
       if (!localStorage.getItem("orders")) {
@@ -72,8 +99,9 @@ export function AuthProvider({ children }) {
 
   const updateCurrentUser = (user) => {
     if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      setCurrentUser(user);
+      const safeUser = sanitizeUser(user);
+      localStorage.setItem("currentUser", JSON.stringify(safeUser));
+      setCurrentUser(safeUser);
     } else {
       localStorage.removeItem("currentUser");
       setCurrentUser(null);
@@ -82,45 +110,41 @@ export function AuthProvider({ children }) {
 
   const login = (email, password) => {
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       const rawUsers = localStorage.getItem("users");
+
       const users = rawUsers
         ? JSON.parse(rawUsers)
         : INITIAL_DEMO_USERS;
 
       const matchedUser = users.find(
-        (user) =>
-          user.email.toLowerCase() === email.trim().toLowerCase()
+        (user) => user.email.toLowerCase() === normalizedEmail
       );
 
-      if (matchedUser) {
-        updateCurrentUser(matchedUser);
-
+      if (!matchedUser || !matchedUser.password) {
         return {
-          success: true,
-          user: matchedUser,
+          success: false,
+          message:
+            "Invalid email or password. If this is an older account, please register again with a different email.",
         };
       }
 
-      const fallbackUser = {
-        id: Date.now(),
-        name: email.split("@")[0] || "User",
-        email: email.trim(),
-        role: "client",
-      };
+      if (matchedUser.password !== password) {
+        return {
+          success: false,
+          message: "Invalid email or password.",
+        };
+      }
 
-      localStorage.setItem(
-        "users",
-        JSON.stringify([...users, fallbackUser])
-      );
-
-      updateCurrentUser(fallbackUser);
+      updateCurrentUser(matchedUser);
 
       return {
         success: true,
-        user: fallbackUser,
+        user: sanitizeUser(matchedUser),
       };
     } catch (err) {
       console.error("Login failed:", err);
+
       return {
         success: false,
         message: "Unable to log in. Please try again.",
@@ -134,12 +158,20 @@ export function AuthProvider({ children }) {
 
   const register = ({ name, email, password, role }) => {
     try {
+      const normalizedEmail = email.trim().toLowerCase();
+
+      if (!name.trim() || !normalizedEmail || !password) {
+        return {
+          success: false,
+          message: "Please fill in all required fields.",
+        };
+      }
+
       const rawUsers = localStorage.getItem("users");
+
       const users = rawUsers
         ? JSON.parse(rawUsers)
         : INITIAL_DEMO_USERS;
-
-      const normalizedEmail = email.trim().toLowerCase();
 
       const existingUser = users.find(
         (user) => user.email.toLowerCase() === normalizedEmail
@@ -148,17 +180,22 @@ export function AuthProvider({ children }) {
       if (existingUser) {
         return {
           success: false,
-          message: "An account with this email already exists. Please log in.",
+          message:
+            "An account with this email already exists. Please log in.",
         };
       }
 
       const newUser = {
         id: Date.now(),
         name: name.trim(),
-        email: email.trim(),
-        role: role === "freelancer" || role === "seller"
-          ? role
-          : "client",
+        email: normalizedEmail,
+        password,
+        role:
+          role === "freelancer" || role === "seller"
+            ? role
+            : role === "buyer"
+              ? "buyer"
+              : "client",
       };
 
       localStorage.setItem(
@@ -170,10 +207,11 @@ export function AuthProvider({ children }) {
 
       return {
         success: true,
-        user: newUser,
+        user: sanitizeUser(newUser),
       };
     } catch (err) {
       console.error("Registration failed:", err);
+
       return {
         success: false,
         message: "Unable to register. Please try again.",
@@ -195,7 +233,6 @@ export function AuthProvider({ children }) {
         quickLogin,
         isLoggedIn: !!currentUser,
 
-        // Support both old and new role names
         isClient:
           currentUser?.role === "client" ||
           currentUser?.role === "buyer",
@@ -216,16 +253,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error(
-      "useAuth must be used within an AuthProvider"
-    );
-  }
-
-  return context;
 }
